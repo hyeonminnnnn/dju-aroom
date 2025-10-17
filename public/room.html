@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>에이룸 - 회의 진행 중</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="room-page-body">
+
+<header id="room-header">
+  회의방 코드: <span id="room-code-display"></span>
+</header>
+
+<main id="videos-container">
+  <div id="local-video-wrapper" class="video-wrapper">
+    <video id="localVideo" autoplay playsinline muted></video>
+    <span class="user-name">나 (You)</span>
+  </div>
+</main>
+
+<footer class="control-bar">
+  <button id="mic-btn" class="control-btn"><i class="fas fa-microphone"></i></button>
+  <button id="cam-btn" class="control-btn"><i class="fas fa-video"></i></button>
+  <button id="end-call-btn" class="control-btn end-call"><i class="fas fa-phone-slash"></i></button>
+</footer>
+
+<script src="https://unpkg.com/simple-peer/simplepeer.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="js/room.js"></script>
+</body>
+</html>

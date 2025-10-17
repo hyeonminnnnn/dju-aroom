@@ -1,0 +1,280 @@
+/* 기본 & 공통 스타일 */
+:root {
+    --dark-bg: #202124;
+    --medium-bg: #3c4043;
+    --light-text: #e8eaed;
+    --accent-green: #34a853;
+    --accent-red: #ea4335;
+    --accent-blue: #4285f4;
+    --default-bg: #f8f9fa;
+    --default-text: #202124;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* --- 로비 페이지 --- */
+.lobby-body {
+    background-color: var(--default-bg);
+    color: var(--default-text);
+    display: flex;
+    flex-direction: column;
+}
+
+.top-bar {
+    background-color: white;
+    padding: 15px 30px;
+    border-bottom: 1px solid #ddd;
+    flex-shrink: 0;
+}
+
+.logo {
+    font-weight: bold;
+    text-decoration: none;
+    color: var(--default-text);
+    font-size: 1.2rem;
+}
+
+.main-container {
+    flex-grow: 1;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+}
+
+.center-box {
+    background-color: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    display: flex;
+    gap: 40px;
+    text-align: center;
+    max-width: 800px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.action-section { flex: 1; }
+.divider { border-left: 1px solid #ddd; }
+
+.input-field, .btn {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.btn {
+    border: none;
+    background-color: var(--accent-blue);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.btn:hover { filter: brightness(0.9); }
+
+@media (max-width: 768px) {
+    .center-box {
+        flex-direction: column;
+        width: 90%;
+        padding: 20px;
+    }
+    .divider { display: none; }
+}
+
+
+/* --- 화상회의 방 페이지 --- */
+.room-page-body {
+    background-color: var(--dark-bg);
+    color: var(--light-text);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* 페이지 전체 스크롤바 절대 금지 */
+}
+
+#room-header {
+    flex-shrink: 0; /* 높이가 늘어나지 않도록 고정 */
+    padding: 10px 15px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+#room-code-display {
+    font-weight: bold;
+    color: var(--accent-blue);
+    background-color: var(--medium-bg);
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+#videos-container {
+    flex-grow: 1; /* 헤더와 컨트롤 바를 제외한 모든 공간 차지 */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 10px;
+    padding: 10px;
+    min-height: 0; /* Flexbox/Grid 아이템의 높이 계산 오류 방지 */
+    overflow: auto; /* 참여자가 많아지면 비디오 영역만 스크롤 (컨트롤 바는 항상 보임) */
+}
+
+.video-wrapper {
+    position: relative;
+    background-color: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid transparent;
+    transition: border-color 0.2s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.video-wrapper.speaking {
+    border-color: var(--accent-green);
+}
+
+.video-wrapper video {
+    width: 100%;
+    height: 100%;
+    /* ❗❗ 핵심 수정: cover -> contain ❗❗ */
+    /* 비율을 유지하며, 잘리는 부분 없이 컨테이너 안에 꽉 차도록 표시 */
+    object-fit: contain;
+    display: block;
+    transform: scaleX(-1);
+}
+
+.video-wrapper .user-name {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+/* 하단 컨트롤 바 */
+.control-bar {
+    flex-shrink: 0; /* 높이가 늘어나지 않도록 고정 */
+    padding: 15px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.control-btn {
+    background-color: var(--medium-bg);
+    color: var(--light-text);
+    border: none;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    font-size: 1.3rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.2s;
+}
+.control-btn:hover { filter: brightness(1.2); }
+.control-btn.toggled-off { background-color: var(--accent-red); }
+.control-btn.end-call { background-color: var(--accent-red); }
+
+@media (max-width: 768px) {
+    .control-btn {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+/* --- 로비 페이지 상단 바 버튼 --- */
+.top-bar-btn {
+    background: none;
+    border: 1px solid var(--accent-blue);
+    color: var(--accent-blue);
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s, color 0.2s;
+}
+.top-bar-btn:hover {
+    background-color: var(--accent-blue);
+    color: white;
+}
+
+/* --- 모달 스타일 --- */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    text-align: center;
+    color: var(--default-text); /* 모달 내부 텍스트 색상 */
+}
+
+.modal h2 {
+    margin-top: 0;
+    color: var(--default-text);
+}
+
+.modal p {
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+}
+
+.modal .input-field {
+    margin-bottom: 15px;
+}
+
+.modal-notice {
+    margin-top: 20px;
+    font-size: 0.8rem;
+    color: var(--accent-red);
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: #aaa;
+}
+.modal-close-btn:hover {
+    color: #333;
+}
+
+.hidden {
+    display: none;
+}
