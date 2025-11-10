@@ -10,6 +10,10 @@ const roomCodeDisplay = document.getElementById('room-code-display');
 const micBtn = document.getElementById('mic-btn');
 const camBtn = document.getElementById('cam-btn');
 const endCallBtn = document.getElementById('end-call-btn');
+const chatBtn = document.getElementById('chat-btn'); // 자막 버튼
+const roomMainContent = document.querySelector('.room-main-content'); // 메인 래퍼
+const chatContainer = document.getElementById('chat-container'); // 자막 창
+const chatMessages = document.getElementById('chat-messages'); // 자막 내용 영역
 
 const socket = io.connect();
 const roomName = window.location.hash.substring(1);
@@ -54,6 +58,7 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: true })
                     // 인식된 텍스트가 비어있지 않으면 서버로 전송
                     if (transcript.trim().length > 0) {
                         socket.emit('recognized text', { room: roomName, text: transcript });
+                        displayMessage(transcript, '나 (You)');
                     }
                 };
 
@@ -151,6 +156,22 @@ endCallBtn.addEventListener('click', () => {
     }
     // --- 여기까지 ---
     window.location.href = '/';
+});
+
+chatBtn.addEventListener('click', () => {
+    roomMainContent.classList.toggle('chat-open'); // 메인 래퍼에 클래스 토글
+    chatBtn.classList.toggle('active'); // 버튼 활성화 스타일
+
+    // (선택 사항) 모바일에서 닫기 버튼을 따로 만들지 않을 경우,
+    // 자막 창을 한 번 더 누르면 닫히게 하는 기능
+    if (window.innerWidth <= 768 && roomMainContent.classList.contains('chat-open')) {
+        chatContainer.addEventListener('click', (e) => {
+            if (e.target === chatContainer) { // 배경 클릭 시
+                roomMainContent.classList.remove('chat-open');
+                chatBtn.classList.remove('active');
+            }
+        }, { once: true }); // 한 번만 실행
+    }
 });
 
 // 페이지 이탈 시
@@ -296,3 +317,12 @@ function startSpeakingDetection(userId, stream, wrapper) {
 
 // 창 크기가 변경될 때마다 레이아웃 업데이트
 window.addEventListener('resize', updateLayout);
+
+function displayMessage(text, from) {
+    const messageEl = document.createElement('p');
+    messageEl.innerHTML = `<strong>${from}:</strong> ${text}`;
+    chatMessages.appendChild(messageEl);
+
+    // 자동으로 맨 아래로 스크롤
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}

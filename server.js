@@ -20,6 +20,7 @@ const rooms = {};
 const summaries = {};
 const roomTexts = {};
 
+// --- 텍스트 수신 및 저장 ---
 io.on('connection', (socket) => {
     socket.on('join room', (roomName) => {
         socket.join(roomName);
@@ -42,6 +43,12 @@ io.on('connection', (socket) => {
 
     socket.on('recognized text', ({ room, text }) => {
         console.log(`[Server] Received text for room ${room} from ${socket.id}: ${text.substring(0, 30)}...`);
+        // (누가 보냈는지 ID와 함께 전송)
+        socket.to(room).emit('new message', {
+            from: socket.id,
+            text: text
+        });
+
         if (!roomTexts[room]) {
             roomTexts[room] = "";
         }
@@ -64,6 +71,7 @@ io.on('connection', (socket) => {
         socket.emit('summary received', { roomCode: roomName, summaryText: summaryToSend });
     });
 
+    // --- 회의 종료 시 요약 실행 ---
     socket.on('disconnect', async () => {
         console.log(`[Server] ${socket.id} disconnected`);
         let disconnectedRoom = null;
@@ -107,7 +115,7 @@ io.on('connection', (socket) => {
     });
 });
 
-// --- Cloudflare Worker 요약 함수 (프롬프트 강화) ---
+// --- Cloudflare Worker 요약 함수  ---
 async function summarizeTextCloudflare(text) {
     if (!text || text.length < 30) {
         return "요약할 내용이 부족합니다.";
@@ -120,7 +128,6 @@ async function summarizeTextCloudflare(text) {
 
     try {
         console.log(`[Server] Requesting summary from Cloudflare Worker...`);
-        // --- ❗❗ 프롬프트 수정: 한국어 강조 및 형식 명시 ---
         const prompt = `다음 대화 내용을 오직 한국어로만 간결하게 요약해줘. 중요한 결정이나 행동 계획 위주로 정리하고, 각 요점은 불렛 포인트(-)로 시작해야 해. 다른 부가 설명은 절대 추가하지 마.\n\n대화 내용:\n"${text}"\n\n요약:`;
 
         const response = await axios.post(workerUrl, { text: prompt }); // Worker 스크립트가 { text: ... } 를 받음

@@ -9,18 +9,31 @@
 </head>
 <body class="room-page-body">
 
-<header id="room-header">
-  회의방 코드: <span id="room-code-display"></span>
-</header>
+<div class="room-main-content">
 
-<main id="videos-container">
-  <div id="local-video-wrapper" class="video-wrapper">
-    <video id="localVideo" autoplay playsinline muted></video>
-    <span class="user-name">나 (You)</span>
-  </div>
-</main>
+  <header id="room-header">
+    회의방 코드: <span id="room-code-display"></span>
+  </header>
 
-<footer class="control-bar">
+  <main id="videos-container">
+    <div id="local-video-wrapper" class="video-wrapper">
+      <video id="localVideo" autoplay playsinline muted></video>
+      <span class="user-name">나 (You)</span>
+    </div>
+  </main>
+
+  <aside id="chat-container" class="hidden">
+    <div class="chat-header">
+      <h3>실시간 자막</h3>
+      <button id="chat-close-btn" class="modal-close-btn">&times;</button>
+    </div>
+    <div id="chat-messages">
+      <p class="chat-system">회의가 시작되었습니다.</p>
+    </div>
+  </aside>
+
+</div> <footer class="control-bar">
+  <button id="chat-btn" class="control-btn"><i class="fas fa-comments"></i></button>
   <button id="mic-btn" class="control-btn"><i class="fas fa-microphone"></i></button>
   <button id="cam-btn" class="control-btn"><i class="fas fa-video"></i></button>
   <button id="end-call-btn" class="control-btn end-call"><i class="fas fa-phone-slash"></i></button>
